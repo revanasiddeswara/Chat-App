@@ -29,3 +29,4 @@ const registerController = async (req, res) => {
 //   create an entry in the DB
 const user = await userModel.create({name,email,password})
 };
+module.exports={registerController,loginController}

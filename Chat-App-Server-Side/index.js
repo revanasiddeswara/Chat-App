@@ -1,11 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const { default: mongoose } = require("mongoose");
+const  mongoose = require("mongoose");
 const userRoutes = require("./Routes/userRouters")
 
 const app = express();
 dotenv.config();
-
+app.use(express.json())
 app.get("/", (req, res) => {
   res.send("Api is running");
 });
@@ -22,7 +22,7 @@ const connectDB = async () => {
 };
 connectDB();
 
-app.use("user/",userRoutes)
+app.use("/user/",userRoutes)
 
 const PORT = process.env.PORT || 5000;
 
