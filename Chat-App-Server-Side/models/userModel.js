@@ -6,9 +6,10 @@ const UserModel = mongoose.Schema(
       type: String,
       required: true,
     },
-    emsil: {
+    email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
