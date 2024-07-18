@@ -1,68 +1,89 @@
-const express = require("express");
-const userModel = require("../models/userModel");
-const expressAsyncHandler = require("express-async-handler");
 const generateToken = require("../config/generateToken");
+const UserModel = require("../models/userModel");
+const expressAsyncHandler = require("express-async-handler");
+// Login
+const loginController = expressAsyncHandler(async (req, res) => {
+  console.log(req.body);
+  const { name, password } = req.body;
 
-const loginController = expressAsyncHandler(async (res,req) => {
-  const { name,password } = req.body;
-  console.log('Request body:', req.body);
-  const user = userModel.findOne({name});
-  if(user && (await user.matchPassword(password))){
-    res.json({
-      _id:user._id,
-      name:user.name,
-      email:user.email,
-      isAdmin:user.isAdmin,
-      toke:generateToken(user._id)
-    })
-  }
-  else{
-    throw new Error("Invalid User name or Password")
-  }
+  const user = await UserModel.findOne({ name });
 
+  console.log("fetched user Data", user);
+  console.log(await user.matchPassword(password));
+  if (user && (await user.matchPassword(password))) {
+    const response = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
+    };
+    console.log(response);
+    res.json(response);
+  } else {
+    res.status(401);
+    throw new Error("Invalid UserName or Password");
+  }
 });
 
-// registration
+// Registration
 const registerController = expressAsyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  console.log('Request body:', req.body);
-  // Checks for all fields
+
+  // check for all fields
   if (!name || !email || !password) {
-    res.sendStatus(400);
-    throw new Error("All fields must be filled");
+    res.send(400);
+    throw Error("All necessary input fields have not been filled");
   }
 
-  // Pre-existing user check
-  const userExist = await userModel.findOne({ email });
+  // pre-existing user
+  const userExist = await UserModel.findOne({ email });
   if (userExist) {
-    res.sendStatus(400);
-    throw new Error("User already exists");
+    // res.send(405);
+    throw new Error("User already Exists");
   }
 
-  // User name already exists check
-  const userNameExist = await userModel.findOne({ name });
+  // userName already Taken
+  const userNameExist = await UserModel.findOne({ name });
   if (userNameExist) {
-    res.sendStatus(400);
-    throw new Error("User name already exists");
+    // res.send(406);
+    throw new Error("UserName already taken");
   }
 
-  // Create an entry in the DB
-  const user = await userModel.create({ name, email, password });
-  
-  // Send a success response
- if(user){
-  res.status(201).json({
-    _id:user._id,
-    name:user.name,
-    email:user.email,
-    isAdmin:user.isAdmin,
-    token:generateToken(user._id)
-  });
- }
- else{
-  res.status(400)
-  throw new Error("Regitration failed")
- }
+  // create an entry in the db
+  const user = await UserModel.create({ name, email, password });
+  if (user) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Registration Error");
+  }
 });
 
-module.exports = { registerController, loginController };
+const fetchAllUsersController = expressAsyncHandler(async (req, res) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+
+  const users = await UserModel.find(keyword).find({
+    _id: { $ne: req.user._id },
+  });
+  res.send(users);
+});
+
+module.exports = {
+  loginController,
+  registerController,
+  fetchAllUsersController,
+};
