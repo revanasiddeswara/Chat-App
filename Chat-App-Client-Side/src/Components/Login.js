@@ -108,7 +108,7 @@ function Login() {
               color="secondary"
               name="name"
               onKeyDown={(event) => {
-                if (event.code == "Enter") {
+                if (event.code === "Enter") {
                   // console.log(event);
                   loginHandler();
                 }
@@ -123,7 +123,7 @@ function Login() {
               color="secondary"
               name="password"
               onKeyDown={(event) => {
-                if (event.code == "Enter") {
+                if (event.code === "Enter") {
                   // console.log(event);
                   loginHandler();
                 }

@@ -58,6 +58,7 @@ function Groups() {
         <div className={"ug-header" + (lightTheme ? "" : " dark")}>
           <img
             src={logo}
+            alt="logo"
             style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
           />
           <p className={"ug-title" + (lightTheme ? "" : " dark")}>
