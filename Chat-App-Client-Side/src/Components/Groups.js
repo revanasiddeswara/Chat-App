@@ -60,6 +60,7 @@ function Groups() {
         }
       });
   }, [refresh, user.token]);
+  console.log("hi");
 
   return (
     <AnimatePresence>
