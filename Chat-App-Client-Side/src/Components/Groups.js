@@ -24,31 +24,45 @@ function Groups() {
     nav("/");
   }
 
-  const user = userData.data;
+  // const user = userData.data;
 
   useEffect(() => {
     const fetchGroups = async () => {
-      console.log("Users refreshed : ", user.token);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
-
-      try {
-        const response = await axios.get("https://chat-app-6fur.onrender.com/chat/fetchGroups", config);
-        console.log("Group Data from API ", response.data);
-        setGroups(response.data);
-      } catch (error) {
-        console.error("Error fetching groups:", error);
-        if (error.response && error.response.status === 401) {
-          nav("/");
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      console.log("Stored User Data:", userData);
+  
+      if (userData) {
+        const { token } = userData;
+        console.log("Using Token:", token);
+  
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+  
+        try {
+          const response = await axios.get(
+            "https://chat-app-6fur.onrender.com/chat/fetchGroups",
+            config
+          );
+          console.log("Group Data from API:", response.data);
+          setGroups(response.data);
+        } catch (error) {
+          console.error("Error fetching groups:", error);
+          if (error.response && error.response.status === 401) {
+            nav("/");
+          }
         }
+      } else {
+        console.log("User not authenticated");
+        nav("/");
       }
     };
-
+  
     fetchGroups();
-  }, [refresh, user.token, nav]);
+  }, [refresh, nav]);
+  
 
   return (
     <AnimatePresence>
