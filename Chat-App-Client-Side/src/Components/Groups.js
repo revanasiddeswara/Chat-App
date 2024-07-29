@@ -114,16 +114,7 @@ function Groups() {
                   dispatch(refreshSidebarFun());
                 }}
               >
-              <motion.div
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
-                className={"list-item" + (lightTheme ? "" : " dark")}
-                key={index}
-                onClick={() => {
-                  console.log("Creating chat with group", group.name);
-                  dispatch(refreshSidebarFun());
-                }}
-              >
+                <p>lorem....................</p>
                 <p className={"con-icon" + (lightTheme ? "" : " dark")}>T</p>
                 <p className={"con-title" + (lightTheme ? "" : " dark")}>
                   {group.chatName}
