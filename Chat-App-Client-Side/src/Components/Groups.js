@@ -12,15 +12,14 @@ import { refreshSidebarFun } from "../Features/refreshSidebar";
 import { myContext } from "./MainContainer";
 
 function Groups() {
-  // const [refresh, setRefresh] = useState(true);
   const { refresh, setRefresh } = useContext(myContext);
 
   const lightTheme = useSelector((state) => state.themeKey);
   const dispatch = useDispatch();
   const [groups, SetGroups] = useState([]);
   const userData = JSON.parse(localStorage.getItem("userData"));
-  // console.log("Data from LocalStorage : ", userData);
   const nav = useNavigate();
+  
   if (!userData) {
     console.log("User not Authenticated");
     nav("/");
@@ -41,7 +40,7 @@ function Groups() {
         console.log("Group Data from API ", response.data);
         SetGroups(response.data);
       });
-  }, [refresh]);
+  }, [refresh, user.token]);
 
   return (
     <AnimatePresence>
