@@ -12,13 +12,10 @@ import { refreshSidebarFun } from "../Features/refreshSidebar";
 import { myContext } from "./MainContainer";
 
 function Users() {
-  // const [refresh, setRefresh] = useState(true);
   const { refresh, setRefresh } = useContext(myContext);
-
   const lightTheme = useSelector((state) => state.themeKey);
   const [users, setUsers] = useState([]);
   const userData = JSON.parse(localStorage.getItem("userData"));
-  // console.log("Data from LocalStorage : ", userData);
   const nav = useNavigate();
   const dispatch = useDispatch();
 
@@ -37,9 +34,8 @@ function Users() {
     axios.get("https://chat-app-6fur.onrender.com/user/fetchUsers", config).then((data) => {
       console.log("UData refreshed in Users panel ");
       setUsers(data.data);
-      // setRefresh(!refresh);
     });
-  }, [refresh]);
+  }, [refresh, userData.data.token]);
 
   return (
     <AnimatePresence>
@@ -55,6 +51,7 @@ function Users() {
         <div className={"ug-header" + (lightTheme ? "" : " dark")}>
           <img
             src={logo}
+            alt="logo"
             style={{ height: "2rem", width: "2rem", marginLeft: "10px" }}
           />
           <p className={"ug-title" + (lightTheme ? "" : " dark")}>
