@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
+// import DeleteIcon from "@mui/icons-material/DeleteOutline";
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import MessageSelf from "./MessageSelf";
@@ -112,7 +113,7 @@ function ChatArea() {
             </p> */}
           </div>
           <IconButton className={"icon" + (lightTheme ? "" : " dark")}>
-            <DeleteIcon />
+            <DeleteOutlineIcon />
           </IconButton>
         </div>
         <div className={"messages-container" + (lightTheme ? "" : " dark")}>
