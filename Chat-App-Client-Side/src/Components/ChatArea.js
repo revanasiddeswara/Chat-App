@@ -32,7 +32,7 @@ function ChatArea() {
     };
     axios
       .post(
-        "http://localhost:5000/message/",
+        "https://chat-app-6fur.onrender.com/message/",
         {
           content: messageContent,
           chatId: chat_id,
@@ -55,7 +55,7 @@ function ChatArea() {
       },
     };
     axios
-      .get("http://localhost:5000/message/" + chat_id, config)
+      .get("https://chat-app-6fur.onrender.com/message/" + chat_id, config)
       .then(({ data }) => {
         setAllMessages(data);
         setloaded(true);

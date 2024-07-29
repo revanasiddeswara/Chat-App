@@ -36,7 +36,7 @@ function Groups() {
     };
 
     axios
-      .get("http://localhost:5000/chat/fetchGroups", config)
+      .get("https://chat-app-6fur.onrender.com/chat/fetchGroups", config)
       .then((response) => {
         console.log("Group Data from API ", response.data);
         SetGroups(response.data);
@@ -97,7 +97,7 @@ function Groups() {
                   //   },
                   // };
                   // axios.post(
-                  //   "http://localhost:5000/chat/",
+                  //   "https://chat-app-6fur.onrender.com/chat/",
                   //   {
                   //     userId: user._id,
                   //   },
