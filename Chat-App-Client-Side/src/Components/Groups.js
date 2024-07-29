@@ -59,7 +59,7 @@ function Groups() {
           console.log("Error Message: ", error.message);
         }
       });
-  }, [refresh, user.token]);
+  }, [refresh, user.token,nav]);
   console.log("hi");
 
   return (
