@@ -11,6 +11,6 @@ const Router = express.Router();
 
 Router.post("/login", loginController);
 Router.post("/register", registerController);
-Router.get("/fetchUsers", protect, fetchAllUsersController);
+Router.get("/fetchUsers", fetchAllUsersController);
 
 module.exports = Router;
