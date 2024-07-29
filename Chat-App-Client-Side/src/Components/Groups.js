@@ -13,9 +13,10 @@ import { myContext } from "./MainContainer";
 
 function Groups() {
   const { refresh, setRefresh } = useContext(myContext);
+
   const lightTheme = useSelector((state) => state.themeKey);
   const dispatch = useDispatch();
-  const [groups, setGroups] = useState([]);
+  const [groups, SetGroups] = useState([]);
   const userData = JSON.parse(localStorage.getItem("userData"));
   const nav = useNavigate();
   
@@ -24,45 +25,22 @@ function Groups() {
     nav("/");
   }
 
-  // const user = userData.data;
-
+  const user = userData.data;
   useEffect(() => {
-    const fetchGroups = async () => {
-      const userData = JSON.parse(localStorage.getItem("userData"));
-      console.log("Stored User Data:", userData);
-  
-      if (userData) {
-        const { token } = userData;
-        console.log("Using Token:", token);
-  
-        const config = {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        };
-  
-        try {
-          const response = await axios.get(
-            "https://chat-app-6fur.onrender.com/chat/fetchGroups",
-            config
-          );
-          console.log("Group Data from API:", response.data);
-          setGroups(response.data);
-        } catch (error) {
-          console.error("Error fetching groups:", error);
-          if (error.response && error.response.status === 401) {
-            nav("/");
-          }
-        }
-      } else {
-        console.log("User not authenticated");
-        nav("/");
-      }
+    console.log("Users refreshed : ", user.token);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     };
-  
-    fetchGroups();
-  }, [refresh, nav]);
-  
+
+    axios
+      .get("https://chat-app-6fur.onrender.com/chat/fetchGroups", config)
+      .then((response) => {
+        console.log("Group Data from API ", response.data);
+        SetGroups(response.data);
+      });
+  }, [refresh, user.token]);
 
   return (
     <AnimatePresence>
@@ -109,11 +87,22 @@ function Groups() {
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className={"list-item" + (lightTheme ? "" : " dark")}
+                className={"list-tem" + (lightTheme ? "" : " dark")}
                 key={index}
                 onClick={() => {
-                  console.log("Creating chat with group", group.chatName);
-                  // Add logic here if you want to create a chat with the group
+                  console.log("Creating chat with group", group.name);
+                  // const config = {
+                  //   headers: {
+                  //     Authorization: `Bearer ${userData.data.token}`,
+                  //   },
+                  // };
+                  // axios.post(
+                  //   "https://chat-app-6fur.onrender.com/chat/",
+                  //   {
+                  //     userId: user._id,
+                  //   },
+                  //   config
+                  // );
                   dispatch(refreshSidebarFun());
                 }}
               >
