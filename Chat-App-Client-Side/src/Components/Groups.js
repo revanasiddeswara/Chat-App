@@ -19,13 +19,14 @@ function Groups() {
   const [groups, SetGroups] = useState([]);
   const userData = JSON.parse(localStorage.getItem("userData"));
   const nav = useNavigate();
-  
+
   if (!userData) {
     console.log("User not Authenticated");
     nav("/");
   }
 
   const user = userData.data;
+
   useEffect(() => {
     console.log("Users refreshed : ", user.token);
     const config = {
@@ -39,6 +40,24 @@ function Groups() {
       .then((response) => {
         console.log("Group Data from API ", response.data);
         SetGroups(response.data);
+      })
+      .catch((error) => {
+        if (error.response) {
+          // Request made and server responded
+          console.log("Error Response Data: ", error.response.data);
+          console.log("Error Response Status: ", error.response.status);
+          console.log("Error Response Headers: ", error.response.headers);
+          if (error.response.status === 401) {
+            console.log("Token expired or unauthorized. Redirecting to login.");
+            nav("/");
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log("Error Request: ", error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error Message: ", error.message);
+        }
       });
   }, [refresh, user.token]);
 
@@ -87,22 +106,10 @@ function Groups() {
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className={"list-tem" + (lightTheme ? "" : " dark")}
+                className={"list-item" + (lightTheme ? "" : " dark")}
                 key={index}
                 onClick={() => {
                   console.log("Creating chat with group", group.name);
-                  // const config = {
-                  //   headers: {
-                  //     Authorization: `Bearer ${userData.data.token}`,
-                  //   },
-                  // };
-                  // axios.post(
-                  //   "https://chat-app-6fur.onrender.com/chat/",
-                  //   {
-                  //     userId: user._id,
-                  //   },
-                  //   config
-                  // );
                   dispatch(refreshSidebarFun());
                 }}
               >
