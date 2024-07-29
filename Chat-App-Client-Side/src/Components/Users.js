@@ -19,35 +19,23 @@ function Users() {
   const nav = useNavigate();
   const dispatch = useDispatch();
 
+  if (!userData) {
+    console.log("User not Authenticated");
+    nav(-1);
+  }
+
   useEffect(() => {
-    if (!userData) {
-      console.log("User not Authenticated");
-      nav("/login");  // Redirect to login if userData is not present
-      return;
-    }
-
-    const fetchUsers = async () => {
-      try {
-        const config = {
-          headers: {
-            Authorization: `Bearer ${userData.data.token}`,
-          },
-        };
-        const response = await axios.get("https://chat-app-6fur.onrender.com/user/fetchUsers", config);
-        console.log("UData refreshed in Users panel ");
-        setUsers(response.data);
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.log("Token expired or invalid. Redirecting to login.");
-          nav("/login");  // Redirect to login if the token is expired or invalid
-        } else {
-          console.error("Error fetching users:", error);
-        }
-      }
+    console.log("Users refreshed");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userData.data.token}`,
+      },
     };
-
-    fetchUsers();
-  }, [refresh, userData, nav]);
+    axios.get("https://chat-app-6fur.onrender.com/user/fetchUsers", config).then((data) => {
+      console.log("UData refreshed in Users panel ");
+      setUsers(data.data);
+    });
+  }, [refresh, userData.data.token]);
 
   return (
     <AnimatePresence>
@@ -93,7 +81,7 @@ function Users() {
               <motion.div
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
-                className={"list-item" + (lightTheme ? "" : " dark")}
+                className={"list-tem" + (lightTheme ? "" : " dark")}
                 key={index}
                 onClick={() => {
                   console.log("Creating chat with ", user.name);
@@ -108,16 +96,8 @@ function Users() {
                       userId: user._id,
                     },
                     config
-                  ).then(() => {
-                    dispatch(refreshSidebarFun());
-                  }).catch(error => {
-                    if (error.response && error.response.status === 401) {
-                      console.log("Token expired or invalid. Redirecting to login.");
-                      nav("/login");  // Redirect to login if the token is expired or invalid
-                    } else {
-                      console.error("Error creating chat:", error);
-                    }
-                  });
+                  );
+                  dispatch(refreshSidebarFun());
                 }}
               >
                 <p className={"con-icon" + (lightTheme ? "" : " dark")}>T</p>
